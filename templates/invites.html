@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% if message %}
+<span style="color:{{ color }}">{{ message }}</span><p>
+{% end %}
+
+<h1>Invites</h1>
+
+{% if invites %}
+    <table>
+        <tr>
+            <th>Code</th>
+            <th>Creator</th>
+            <th>Uses</th>
+            <th>Max Uses</th>
+            <th>Expires At</th>
+            <th>Actions</th>
+        </tr>
+        {% for invite in invites %}
+            <tr>
+                <th>{{ invite["id"] }}</th>
+                <th>{{ invite["creator"] }}</th>
+                <th>{{ invite["uses"] }}</th>
+                <th>{{ invite["max_uses"] or "Infinite" }}</th>
+                <th>{{ locale.format_date(invite["expires_at"], full_format=True) if invite["expires_at"] else "Never" }}</th>
+                <th>
+                    <button class="button" onclick="copy('{{ handler.application.url }}/invite/{{ invite['id'] }}');">Copy Link</button>
+                    <form class="form" action="/settings/invites?action=deleteInvite&invite_id={{ invite['id'] }}" method="POST">
+                        {% module xsrf_form_html() %}
+                        <input class="danger" type="submit" onclick="return confirmation('Do you really want to delete this invite?');" value="Delete">
+                    </form>
+                </th>
+            </tr>
+        {% end %}
+    </table>
+{% end %}
+
+<br>
+
+<div class="box">
+    <h2>Create Invite</h2>
+    <form class="form" action="/settings/invites?action=createInvite" method="POST">
+        Max Uses:
+        <select class="button" name="max_uses" id="max_uses" name="max_uses">
+            <option value="1" selected>1 use</option>
+            <option value="2">2 uses</option>
+            <option value="5">5 uses</option>
+            <option value="10">10 uses</option>
+            <option value="25">25 uses</option>
+            <option value="50">50 uses</option>
+            <option value="100">100 uses</option>
+            <option value="0">Infinite</option>
+          </select>
+        <br>
+        Expires In:
+        <select class="button" name="expires_in" id="expires_in" name="max_uses">
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60" selected>1 hour</option>
+            <option value="720">12 hours</option>
+            <option value="1440">1 day</option>
+            <option value="100800">1 week</option>
+            <option value="0">Never</option>
+          </select>
+        <br>
+        {% module xsrf_form_html() %}
+        <input class="button" type="submit" value="Create"><br>
+    </form>
+</div>
+
+{% end %}

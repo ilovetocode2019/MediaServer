@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% if message %}
+<span style="color: {{ color }};">{{ message }}</span><p>
+{% end %}
+
+<h1>Invite</h1>
+
+<form class="form" action="/invite/{{ code }}" method="POST">
+    Username: <input class="text-box" type="text" id="username" name="username"><br>
+    Password: <input class="text-box" type="password" id="password" name="password"><br>
+    {% module xsrf_form_html() %}
+    <input class="button" type="submit", value="Join">
+</form>
+
+{% end %}

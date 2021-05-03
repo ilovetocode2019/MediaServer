@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% if message %}
+<span style="color: {{ color }}">{{ message }}</span><p>
+{% end %}
+
+<h1>Profile</h1>
+
+<div>
+    <h3>Username: {{ current_user["username"] }}</h3>
+    <h3>Created: {{ locale.format_date(current_user["created_at"], full_format=True) }}</h3>
+</div>
+
+<br>
+<div class="box">
+    <h2>Change Username</h2>
+    <form class="form" action="/profile?action=changeUsername" method="POST">
+        Username<br><input class="text-box" type="text" id="username" name="username"><br>
+        {% module xsrf_form_html() %}
+        <input class="button" type="submit" value="Change Username">
+    </form>
+</div>
+
+<br>
+<div class="box">
+    <h2>Change Password</h2>
+    <form class="form" action="/profile?action=changePassword" method="POST">
+        Password<br><input class="text-box" type="text" id="password" name="password"><br>
+        {% module xsrf_form_html() %}
+        <input class="button" type="submit" value="Change Password">
+    </form>
+</div>
+
+<br>
+<form action="/profile?action=deleteAccount" method="POST">
+    {% module xsrf_form_html() %}
+    <input class="danger" type="submit" onclick="return confirmation('Are you absolutely sure you want to delete your account? This will also delete all files uploaded on your account');" value="Delete Account">
+</form>
+
+{% end %}

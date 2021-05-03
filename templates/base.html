@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ escape(handler.settings["app_title"]) }}</title>
+        <link rel="stylesheet" href="{{ static_url("styles.css") }}" type="text/css">
+        <script type="text/javascript" src="{{ static_url("javascript.js") }}"></script>
+        {% block head %}{% end %}
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/"><b>{{ escape(handler.settings["app_title"]) }}</b></a>
+            {% if current_user %}
+                <a href="/upload">Upload</a>
+                {% if current_user["id"] == 1 %}
+                    <a href="/gallery">Gallery</a>
+                    <a href="/settings/users">Users</a>
+                    <a href="/settings/invites">Invites</a>
+                {% end %}
+                <div class="dropdown">
+                    <button class="dropdown-button">Logged in as {{ current_user["username"] }}</button>
+                    <div class="dropdown-content">
+                        <a href="/profile">Profile</a>
+                        <a href="/setup">Setup</a>
+                        <a href="/auth/logout">Log Out</a>
+                </div>
+            {% end %}
+            </div>
+        </div>
+        <div class="block-body">{% block body %}{% end %}</div>
+    </div>
+    {% block bottom %}{% end %}
+    </body>
+</html>

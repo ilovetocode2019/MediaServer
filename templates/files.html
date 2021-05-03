@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block body %}
+
+<h1>Your Files</h1>
+
+<div class="cards">
+   {% for file in files %}
+        <div class="card">
+            <div class="thumbnail-container">
+                {% if file["filename"].split(".")[-1] in ("apng", "avif", "gif", "jpg", "jpeg", "png", "svg", "webp") %}
+                    <img class="thumbnail" src="/{{ file['path'] }}">
+                {% elif file["filename"].split(".")[-1] in ("mp4", "webm", "ogg") %}
+                    <video class="thumbnail" controls>
+                        <source class="thumbnail" src="/{{ file['path'] }}" type="video/{{ file['filename'].split('.')[-1] }}">
+                    </video>
+                {% elif file["filename"].split(".")[-1] in ("wav", "mp3") %}
+                    <audio class="thumbnail" controls>
+                        <source class="thumbnail" src="/{{ file['path'] }}" type="audio/{{ 'mpeg' if file['filename'].split('.')[-1] == 'mp3' else 'wav' }}">
+                    </audio>
+                {% else %}
+                    <img class="thumbnail" src="{{ static_url('file.png') }}">
+                {% end %}
+            </div>
+            <div class="content">
+                <br>
+                <b>{{ file["filename"] }}</b><br><br>
+                Uploaded: {{ locale.format_date(file["created_at"], full_format=True) }}<br>
+                Views: {{ file["views"] }}<br>
+                <button class="button" onclick="copy('{{ handler.application.url }}/{{ file['id'] }}');">Copy Link</button>
+                <a class="button" href="/file/{{ file['id'] }}">Info</a>
+                <form class="form" action="/?action=deleteFile&page={{ current_page }}&file_id={{ file['id'] }}" method="POST">
+                    {% module xsrf_form_html() %}
+                    <input class="danger" type="submit" onclick="return confirmation('Do you really want to delete this file?');" value="Delete">
+                </form>
+            </div>
+        </div>
+    {% end %}
+</div>
+
+{% if not files %}
+    You don't have any files uploaded. You can <a class="link" href="/upload">upload a file</a> or <a class="link" href="/setup">configure ShareX</a>.
+{% end %}
+
+<div class="pages">
+    <p>
+        {% if pages <= 3 and pages > 1 %}
+            {% for page in range(1, pages + 1) %}
+                <a class="page" href="/?page={{ page }}">{{ page }}</a>
+            {% end %}
+        {% elif pages > 3 %}
+            <a class="page" href="/?page=1">1</a>
+            <a class="page" href="/?page=2">2</a>
+            <a class="page-gray">...</a>
+            <a class="page" href="/?page={{ pages }}">{{ pages }}</a>
+        {% end %}
+    </p>
+</div>
+
+{% end %}

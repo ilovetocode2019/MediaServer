@@ -1,0 +1,6 @@
+*.pyc
+static/uploads/*
+!static/uploads/.gitkeep
+app.conf
+cert.pem
+key.pem

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% if message %}
+<span style="color: {{ color }};">{{ message }}</span><p>
+{% end %}
+
+<h1>Users</h1>
+
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Created At</th>
+        <th>Actions</th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <th>{{ user["username"] }}</th>
+            <th>{{ locale.format_date(user["created_at"], full_format=True) }}</th>
+            <th>
+                <form action="/settings/users?action=deleteAccount&user_id={{ user['id'] }}" method="POST">
+                    {% module xsrf_form_html() %}
+                    <input class="button" type="submit" onclick="return confirmation('Are you sure you want to delete this user? This will also delete any files uploaded by them');" value="Delete">
+                </form>
+            </th>
+        </tr>
+    {% end %}
+</table>
+
+{% end %}

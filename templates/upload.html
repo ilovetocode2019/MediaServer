@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% if message %}
+<span style="color: {{ color }};">{{ message }}</span><p>
+{% end %}
+
+<h1>Upload</h1>
+
+<form action="/upload" enctype="multipart/form-data" method="POST">
+    <input class="button" type="file" id="filedata" name="filedata" value="Select File"><br>
+    {% module xsrf_form_html() %}
+    <input class="button" type="submit" value="Upload"><br>
+</form>
+
+{% end %}
