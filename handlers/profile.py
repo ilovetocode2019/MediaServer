@@ -45,6 +45,8 @@ class ProfileHandler(BaseHandler):
             )
 
             self.current_user["username"] = username
+            self.set_secure_cookie("username", username)
+
             self.render(
                 "profile.html",
                 current_user=self.current_user,
@@ -67,6 +69,8 @@ class ProfileHandler(BaseHandler):
             )
 
             self.current_user["hashed_password"] = hashed_password
+            self.set_secure_cookie("password", password)
+
             self.render(
                 "profile.html",
                 current_user=self.current_user,
