@@ -25,6 +25,10 @@ tornado.options.define("debug", default=False, type=bool, help="Whether to run t
 
 
 async def create_tables(database):
+    with open("schema.sql") as file:
+        schema = file.read()
+        await database.execute(schema)
+
     query = """SELECT *
                FROM users;
             """
