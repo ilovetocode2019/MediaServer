@@ -27,7 +27,7 @@
 <br>
 
 <button class="button" onclick="copy('{{ handler.application.url }}/{{ file['id'] }}');">Copy Link</button>
-{% if current_user["id"] == 1 or current_user["id"] == file["user_id"] %}
+{% if current_user and (current_user["id"] == 1 or current_user["id"] == file["user_id"]) %}
     <form class="form" action="/file/{{ file['id'] }}?action=deleteFile" method="POST">
         {% module xsrf_form_html() %}
         <input class="danger" type="submit" onclick="return confirmation('Do you really want to delete this file');" value="Delete">
