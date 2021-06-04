@@ -166,7 +166,6 @@ table {
 }
 
 .pages {
-    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -176,7 +175,7 @@ table {
 .page {
     background-color: #353839;
     color: #FBFAF5;
-    width: 25px;
+    width: 30px;
     height: 25px;
     padding: 10px;
     text-align: center;
@@ -193,7 +192,20 @@ table {
 .page-gray {
     background-color: gray;
     color: #FBFAF5;
-    width: 25px;
+    width: 30px;
+    height: 25px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0;
+}
+
+.page-selected {
+    background-color: #6A5ACD;
+    color: #FBFAF5;
+    width: 30px;
     height: 25px;
     padding: 10px;
     text-align: center;

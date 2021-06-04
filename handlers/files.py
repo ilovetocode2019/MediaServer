@@ -31,19 +31,24 @@ class FilesHandler(BaseHandler):
 
     @tornado.web.authenticated
     async def get(self):
-        raw_page = self.get_argument("page", 1)
-        page = int(raw_page)
+        raw_page = self.get_argument("page", "1")
+        current_page = int(raw_page) if raw_page.isdigit() else 0
 
         per_page = 12
-        start = (page - 1) * per_page
-        end = page * per_page
+        start = (current_page - 1) * per_page
+        end = current_page * per_page
 
         files = await self.get_files()
+        pages = int(len(files) / per_page) + 1
+
+        if current_page < 1 or current_page > pages:
+            self.redirect("?page=1")
+
         self.render(
             "files.html",
             files=files[start:end],
-            pages=int(len(files) / per_page) + 1,
-            current_page=page
+            pages=pages,
+            current_page=current_page
         )
 
     @tornado.web.authenticated
