@@ -22,7 +22,7 @@ tornado.options.define("url_legnth", default=4, type=int, help="The URL legnth f
 tornado.options.define("database_uri", help="The URI for the postgresql database")
 tornado.options.define("cookie_secret", help="The cookie secret for storing secure cookies")
 tornado.options.define("debug", default=False, type=bool, help="Whether to run the server in debug mode")
-
+tornado.options.define("reset_password", default=False, type=bool, help="Reset the admin account password if you forgot it")
 
 async def create_tables(database):
     with open("schema.sql") as file:
@@ -53,9 +53,41 @@ async def create_tables(database):
         )
 
         print(
-            "The admin user has been created with the username Admin "
-            f"and the password {tornado.escape.to_unicode(password)}. "
-            "You can change your username and password on the settings page.",
+            "The admin account has been created with the username Admin"
+            f"and the password {tornado.escape.to_unicode(password)}."
+            "You can change your username and password on the profile",
+            "settings page, once you are logged in to the admin account.",
+            "Make sure you don't forget the password.",
+            "If you do you can reset it by adding the --reset-password",
+            "option when running the server.",
+            file=sys.stderr
+        )
+    elif tornado.options.options.reset_password:
+        password = "".join(
+            random.choice(string.ascii_letters+string.digits)
+            for x in range(8)
+        )
+        password = tornado.escape.utf8(password)
+        hashed_password = await tornado.ioloop.IOLoop.current(
+        ).run_in_executor(None, bcrypt.hashpw, password, bcrypt.gensalt())
+
+        query = """UPDATE users
+                   SET hashed_password=$1
+                   WHERE users.id=1"""
+        await database.execute(
+            query,
+            tornado.escape.to_unicode(hashed_password)
+        )
+
+        print(
+            "The admin account password has been reset through",
+            "the reset-password option.",
+            f"The password {tornado.escape.to_unicode(password)}."
+            "You can change your username and password on the profile",
+            "settings page, once you are logged in to the admin account.",
+            "Make sure you don't forget the password. ",
+            "If you do you can reset it by adding the --reset-password",
+            "option when running the server.",
             file=sys.stderr
         )
 
