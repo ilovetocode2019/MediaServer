@@ -58,7 +58,7 @@ class GalleryHandler(BaseHandler):
             self.redirect("?page=1")
 
         self.render(
-            "files.html",
+            "gallery.html",
             files=files[start:end],
             pages=pages,
             current_page=current_page

@@ -29,7 +29,7 @@
                 Views: {{ file["views"] }}<br>
                 <button class="button" onclick="copy('{{ handler.application.url }}/{{ file["id"] }}');">Copy Link</button>
                 <a class="button" href="/file/{{ file['id'] }}">Info</a>
-                <form class="form" action="/gallery/?action=deleteFile&page={{ current_page }}&file_id={{ file['id'] }}" method="POST">
+                <form class="form" action="/gallery?action=deleteFile&page={{ current_page }}&file_id={{ file['id'] }}" method="POST">
                     {% module xsrf_form_html() %}
                     <input class="danger" type="submit" onclick="return confirmation('Do you really want to delete this file?');" value="Delete">
                 </form>
@@ -47,46 +47,46 @@
         <p>
             {% if pages <= 3 %}
                 {% for page in range(1, pages + 1) %}
-                    <a class="page" href="/?page={{ page }}">{{ page }}</a>
+                    <a class="page" href="/gallery?page={{ page }}">{{ page }}</a>
                 {% end %}
 
             {% else %}
                 {% if current_page > 1 %}
-                    <a class="page" href="/?page={{ current_page - 1 }}">Back</a>
+                    <a class="page" href="/gallery?page={{ current_page - 1 }}">Back</a>
                 {% else %}
                     <a class="page-gray">Back</a>
                 {% end %}
 
                 {% if current_page == 1 %}
                     <a class="page-selected">1</a>
-                    <a class="page" href="/?page=2">2</a>
+                    <a class="page" href="/gallery?page=2">2</a>
                     <a class="page-gray">...</a>
-                    <a class="page" href="/?page={{ pages }}">{{ pages }}</a>
+                    <a class="page" href="/gallery?page={{ pages }}">{{ pages }}</a>
                 {% elif current_page ==  2 %}
-                    <a class="page" href="/?page=1">1</a>
+                    <a class="page" href="/gallery?page=1">1</a>
                     <a class="page-selected">2</a>
                     <a class="page-gray">...</a>
-                    <a class="page" href="/?page={{ pages }}">{{ pages }}</a>
+                    <a class="page" href="/gallery?page={{ pages }}">{{ pages }}</a>
                 {% elif current_page > 2 and current_page < pages - 1 %}
-                    <a class="page" href="/?page=1">1</a>
-                    <a class="page-gray">...</a>
-                    <a class="page-selected">{{ curren+t_page }}</a>
-                    <a class="page-gray">...</a>
-                    <a class="page" href="/?page={{ pages }}">{{ pages }}</a>
-                {% elif current_page == pages - 1 %}
-                    <a class="page" href="/?page=1">1</a>
+                    <a class="page" href="/gallery?page=1">1</a>
                     <a class="page-gray">...</a>
                     <a class="page-selected">{{ current_page }}</a>
-                    <a class="page" href="/?page={{ pages }}">{{ pages }}</a>
-                {% else %}
-                    <a class="page" href="/?page=1">1</a>
                     <a class="page-gray">...</a>
-                    <a class="page" href="/?page={{ pages - 1 }}">{{ pages - 1 }}</a>
+                    <a class="page" href="/gallery?page={{ pages }}">{{ pages }}</a>
+                {% elif current_page == pages - 1 %}
+                    <a class="page" href="/gallery?page=1">1</a>
+                    <a class="page-gray">...</a>
+                    <a class="page-selected">{{ current_page }}</a>
+                    <a class="page" href="/gallery?page={{ pages }}">{{ pages }}</a>
+                {% else %}
+                    <a class="page" href="/gallery?page=1">1</a>
+                    <a class="page-gray">...</a>
+                    <a class="page" href="/gallery?page={{ pages - 1 }}">{{ pages - 1 }}</a>
                     <a class="page-selected">{{ pages }}</a>
                 {% end %}
 
                 {% if current_page < pages %}
-                    <a class="page" href="/?page={{ current_page + 1 }}">Next</a>
+                    <a class="page" href="/gallery?page={{ current_page + 1 }}">Next</a>
                 {% else %}
                     <a class="page-gray">Next</a>
                 {% end %}
