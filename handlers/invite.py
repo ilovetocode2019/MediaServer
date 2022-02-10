@@ -14,16 +14,17 @@ class InviteHandler(BaseHandler):
                 """
         invite = await self.application.database.fetchrow(query, code)
 
-        if not invite:
-            raise tornado.web.HTTPError(404, "Invite is invalid or expired")
-
-        if invite["expires_at"] <= datetime.datetime.utcnow():
+        if invite and invite["expires_at"] <= datetime.datetime.utcnow():
             query = """DELETE FROM invites
                        WHERE invites.id=$1;
                     """
             await self.application.database.execute(query, invite["id"])
 
-            raise tornado.web.HTTPError(404, "Invite has expired")
+            invite = None
+
+        if not invite:
+            self.set_status(404)
+            self.render("errors/invalid_invite.html")
 
         self.render("invite.html", code=code, message=None)
 
@@ -36,9 +37,6 @@ class InviteHandler(BaseHandler):
                    WHERE invites.id=$1;
                 """
         invite = await self.application.database.fetchrow(query, code)
-
-        if not invite:
-            raise tornado.web.HTTPError(404, "Invite is invalid or expired")
 
         if (
             invite["expires_at"]
