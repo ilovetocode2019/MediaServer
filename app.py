@@ -16,6 +16,7 @@ import handlers
 
 tornado.options.define("title", default="Media Server", help="The title for the media server")
 tornado.options.define("domain", default="localhost", help="The domain for the server")
+tornado.options.define("domain_override", default=None, help="Override the default host:port link url with a domain", type=str)
 tornado.options.define("port", default=8080, type=int, help="The port to run the server on")
 tornado.options.define("ssl_enabled", default=True, type=bool, help="Whether to enable ssl (https support)")
 tornado.options.define("url_legnth", default=4, type=int, help="The URL legnth for uploaded files")
@@ -142,6 +143,10 @@ class Application(tornado.web.Application):
     @property
     def url(self):
         protocol = "https" if tornado.options.options.ssl_enabled else "http"
+
+        if tornado.options.options.domain_override:
+            return f"{protocol}://{tornado.options.options.domain_override}"
+
         port = tornado.options.options.port
         display_port = "" if port in (80, 443) else f":{port}"
 
